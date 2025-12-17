@@ -114,7 +114,7 @@ import { useRouter } from "next/navigation";
 
 export default function ChatPage() {
   const { darkMode } = useTheme();
-  const { token, logout } = useAuth();
+  const { token, logout, isLoading } = useAuth();
   const router = useRouter();
 
   // Loading dots animation component
@@ -163,8 +163,8 @@ export default function ChatPage() {
             <span
               key={index}
               className={`transition-colors duration-150 ${isCurrentWord
-                  ? 'bg-sky-100/90 dark:bg-sky-300/40 rounded px-0.5'
-                  : ''
+                ? 'bg-sky-100/90 dark:bg-sky-300/40 rounded px-0.5'
+                : ''
                 }`}
             >
               {segment.text}
@@ -868,6 +868,8 @@ export default function ChatPage() {
 
   useEffect(() => {
     const fetchChatSessionHistory = async () => {
+      if (isLoading) return; // Wait for auth to initialize
+
       try {
         // CRITICAL FIX: Logged-in users fetch from backend, guests use localStorage
         if (token) {
@@ -964,7 +966,7 @@ export default function ChatPage() {
     };
 
     fetchChatSessionHistory();
-  }, [token]); // Re-fetch when auth state changes
+  }, [token, isLoading]); // Re-fetch when auth state changes
   // The button should be enabled for logged-in users.
 
   useEffect(() => {
@@ -2300,7 +2302,7 @@ export default function ChatPage() {
 
       if (res.ok) {
         setChatSessions((prev) =>
-          prev.map((s) => (s.id === id ? { ...s, name: editedName } : s))
+          prev.map((s) => (s.id === id ? { ...s, sessionName: editedName } : s))
         );
       } else {
         const errorText = await res.text();
