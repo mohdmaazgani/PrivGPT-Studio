@@ -137,3 +137,38 @@ If you witness or experience unacceptable behavior, please report it privately v
 This project is licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). Make sure to review and comply with the [license terms](https://github.com/rucha-ambaliya/privgpt-studio/blob/master/LICENSE).
 
 <h3 align="right"><a href="#top">⬆️</a></h3>
+
+---
+
+## 🚀 Beginner Contribution Roadmap (First-Time Contributors)
+
+If this is your first open-source contribution, follow these steps:
+
+### Step 1: Understand the Project
+- Read the README and CONTRIBUTING files
+- Run the project locally if possible
+- Explore the UI and core features
+
+### Step 2: Pick the Right Issue
+- Look for labels like `beginner`, `easy`, or `level-1`
+- Comment on the issue and ask to be assigned
+- Avoid large features in your first PR
+
+### Step 3: Make Small, Meaningful Changes
+Good first contributions include:
+- Improving documentation
+- Fixing UI alignment or responsiveness
+- Adding tests or examples
+- Improving error messages
+
+### Step 4: Commit with Clarity
+- Keep commits small and focused
+- Use clear commit messages
+- Link your PR to the related issue if any
+
+### Step 5: Ask for Feedback
+- Be open to reviews
+- Ask questions in Discord if stuck
+- Improve based on maintainer feedback
+
+Your first PR doesn’t need to be perfect—just honest, useful, and well-explained 🌱
