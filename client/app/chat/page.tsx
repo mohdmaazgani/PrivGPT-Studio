@@ -2196,6 +2196,10 @@ export default function ChatPage() {
 
       const data = await response.json();
 
+      if (data.limit_reached) {
+        setIsLimitReached(true);
+      }
+
       const formattedMessages: Message[] = data.messages.map(
         (msg: any, index: number) => {
           const normalizedRole: "user" | "assistant" =

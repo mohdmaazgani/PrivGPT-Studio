@@ -676,10 +676,13 @@ def get_session_messages(session_id):
         for msg in session.get("messages", []):
             if "timestamp" in msg:
                 msg["timestamp"] = msg["timestamp"].isoformat()
+        
+        limit_reached = has_reached_message_limit(session_id)
 
         return jsonify({
             "session_id": str(session["_id"]),
-            "messages": session["messages"]
+            "messages": session["messages"],
+            "limit_reached": limit_reached
         })
 
     except Exception as e:
