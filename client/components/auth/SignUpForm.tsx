@@ -45,7 +45,12 @@ const formSchema = z
     username: z.string().optional(),
     gender: z.enum(["male", "female", "other"]).optional().or(z.literal("")),
     dob: z.string().optional(),
-    phone: z.string().optional(),
+    phone: z
+      .string()
+      .regex(/^[1-9]\d{9}$/, {
+        message: "Phone number must be a valid 10-digit number",
+      })
+      .optional().or(z.literal("")),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match.",
@@ -100,7 +105,7 @@ export function SignUpForm() {
   }
 
   return (
-    <Card className="mx-auto max-w-sm w-full">
+    <Card className="w-full max-w-sm mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
@@ -152,7 +157,7 @@ export function SignUpForm() {
 
             <hr className="my-2" />
 
-            <p className="text-sm text-muted-foreground -mt-2">
+            <p className="-mt-2 text-sm text-muted-foreground">
               These fields are optional. You can update them later.
             </p>
 
@@ -228,7 +233,7 @@ export function SignUpForm() {
             </Button>
           </form>
         </Form>
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-4 text-sm text-center">
           Already have an account?{" "}
           <Link href="/sign-in" className="underline">
             Sign in
