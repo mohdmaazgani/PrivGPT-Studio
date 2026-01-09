@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import {
   Send,
+  Search,
   Settings,
   Info,
   MessageSquare,
@@ -545,6 +546,7 @@ export default function ChatPage() {
   // [NEW] Add this state
   const [isLimitReached, setIsLimitReached] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   // Text-to-Speech (Web Speech API)
   const [speechSupported, setSpeechSupported] = useState<boolean>(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -2767,6 +2769,15 @@ export default function ChatPage() {
                   Currently using: {selectedModel}
                 </p>
               </div>
+              <div className="relative mr-4 hidden md:block">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search messages..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 w-[200px]"
+                />
+              </div>
             </div>
             <Badge
               variant={selectedModelType === "cloud" ? "default" : "secondary"}
@@ -2786,7 +2797,11 @@ export default function ChatPage() {
   dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 
   dark:[&::-webkit-scrollbar-thumb:hover]:bg-gray-500 p-4 space-y-4"
         >
-          {messages.map((message) => (
+          {messages
+            .filter((message) =>
+              message.content.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((message) => (
             <div
               key={message.id}
               className={`flex ${message.role === "user" ? "justify-end" : "justify-start"
