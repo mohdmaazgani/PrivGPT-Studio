@@ -6,7 +6,7 @@
 
 ***Our Commitment***
 
-PrivGPT-Studio is committed to maintaining a respectful, inclusive, and professional environment for all contributors participating in GSSoC’25. We believe in fostering an open-source culture where every individual—regardless of background, identity, or experience—can collaborate safely and constructively. This project promotes privacy-conscious innovation, and we expect all participants to uphold integrity, mutual respect, and ethical collaboration throughout their contributions.
+PrivGPT-Studio is committed to maintaining a respectful, inclusive, and professional environment for all the contributors. We believe in fostering an open-source culture where every individual—regardless of background, identity, or experience—can collaborate safely and constructively. This project promotes privacy-conscious innovation, and we expect all participants to uphold integrity, mutual respect, and ethical collaboration throughout their contributions.
 
 ---
 
@@ -74,7 +74,7 @@ All contributors to PrivGPT-Studio are expected to:
 
 ***Our Vision***
 
-PrivGPT-Studio is not just a privacy-focused project—it is a community built on shared respect, transparency, and innovation. As part of GSSoC’25, we aim to empower contributors to learn, grow, and build impactful solutions together. By adhering to this Code of Conduct, we ensure that our collective efforts reflect the values of ethical open-source development.
+PrivGPT-Studio is not just a privacy-focused project—it is a community built on shared respect, transparency, and innovation. As part of GSSoC’25, Hacktoberfest'25, ECWoC'26 and more, we aim to empower contributors to learn, grow, and build impactful solutions together. By adhering to this Code of Conduct, we ensure that our collective efforts reflect the values of ethical open-source development.
 
 ---
 
