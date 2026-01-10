@@ -1,9 +1,8 @@
----
+<!---
 name: 📖 Documentation update
 about: Suggest improvements or report issues related to documentation
 title: "DOC: <brief description>"
-labels: documentation
----
+--->
 
 <!-- Thank you for taking the time to contribute! 🙌 -->
 
@@ -22,4 +21,5 @@ labels: documentation
 
 
 # Additional Context
+<!-- Optional -->
 <!-- Add any other relevant context or screenshots if needed. -->
