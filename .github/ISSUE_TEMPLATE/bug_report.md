@@ -1,14 +1,13 @@
----
+<!--
 name: 🐛 Bug report
 about: Report a bug to help us improve
 title: "BUG: <brief description>"
-labels: bug
----
+-->
 
 <!-- Thank you for taking the time to contribute! 🙌 -->
 
 
-# Describe the bug
+# Description
 <!-- A clear and concise description of what the bug is. -->
 
 
@@ -35,5 +34,6 @@ labels: bug
 - [ ] I am a ECWoC'26 contributor
 
 
-# Additional context
+# Additional context 
+<!-- Optional -->
 <!-- Add any other context about the problem here. -->
