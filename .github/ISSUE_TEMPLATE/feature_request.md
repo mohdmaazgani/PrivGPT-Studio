@@ -1,8 +1,9 @@
-<!---
+---
 name: 💡 Feature request
 about: Suggest an idea for this project
 title: "FEATURE: <brief description>"
---->
+labels: enhancement
+---
 
 <!-- Thank you for taking the time to contribute! 🙌 -->
 
