@@ -1,8 +1,9 @@
-<!---
+---
 name: 📖 Documentation update
 about: Suggest improvements or report issues related to documentation
-title: "DOC: <brief description>"
---->
+title: "DOC: "
+labels: documentation
+---
 
 <!-- Thank you for taking the time to contribute! 🙌 -->
 
