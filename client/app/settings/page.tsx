@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, User, Mail, Lock, Cpu, Cloud, Loader2, Edit2, Save, X } from "lucide-react";
-import Link from "next/link";
+import { User, Mail, Cpu, Cloud, Loader2, Edit2, Save, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import ClientLayout from "@/components/client-layout";
 
 export default function SettingsPage() {
   const { token, isLoading: authLoading } = useAuth();
@@ -124,180 +124,179 @@ export default function SettingsPage() {
 
   if (authLoading || (loading && token)) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <ClientLayout>
+        <div className="flex h-[calc(100vh-200px)] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </ClientLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="mx-auto max-w-4xl space-y-8">
-        <div className="flex items-center space-x-4">
-          <Link href="/chat">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-            <p className="text-muted-foreground">Manage your profile and view system configurations.</p>
+    <ClientLayout>
+      <div className="bg-background p-4 md:p-8">
+        <div className="mx-auto max-w-4xl space-y-8">
+          <div className="flex items-center space-x-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+              <p className="text-muted-foreground">Manage your profile and view system configurations.</p>
+            </div>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="space-y-1">
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Profile Information
+                  </CardTitle>
+                  <CardDescription>Your personal account details</CardDescription>
+                </div>
+                {!isEditing ? (
+                  <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" onClick={cancelEdit} disabled={saving}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                    <Button variant="default" size="sm" onClick={handleSave} disabled={saving}>
+                      {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      value={profile?.email || ""}
+                      disabled
+                      className="pl-9 bg-muted"
+                    />
+                  </div>
+                  {isEditing && (
+                    <p className="text-xs text-muted-foreground">
+                      Email cannot be changed directly.
+                    </p>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username</Label>
+                  <div className="relative">
+                    <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="username"
+                      value={isEditing ? formData.username : profile?.username || ""}
+                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                      disabled={!isEditing}
+                      className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="gender">Gender</Label>
+                  <div className="relative">
+                    <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="gender"
+                      value={isEditing ? formData.gender : profile?.gender || ""}
+                      onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                      disabled={!isEditing}
+                      className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dob">DOB</Label>
+                  <div className="relative">
+                    <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="dob"
+                      value={isEditing ? formData.dob : profile?.dob || ""}
+                      onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                      disabled={!isEditing}
+                      className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone</Label>
+                  <div className="relative">
+                    <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="phone"
+                      value={isEditing ? formData.phone : profile?.phone || ""}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      disabled={!isEditing}
+                      className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Cpu className="h-5 w-5" />
+                  Available Models
+                </CardTitle>
+                <CardDescription>AI models currently available in the system</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-green-500" />
+                    Local Models (Privacy Focused)
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {models.local_models.length > 0 ? (
+                      models.local_models.map((model) => (
+                        <Badge key={model} variant="outline" className="px-3 py-1">
+                          {model}
+                        </Badge>
+                      ))
+                    ) : (
+                      <span className="text-sm text-muted-foreground italic">No local models detected</span>
+                    )}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium flex items-center gap-2">
+                    <Cloud className="h-4 w-4 text-blue-500" />
+                    Cloud Models (Gemini)
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                     {models.cloud_models.length > 0 ? (
+                      models.cloud_models.map((model) => (
+                        <Badge key={model} variant="default" className="px-3 py-1 bg-blue-600 hover:bg-blue-700">
+                          {model}
+                        </Badge>
+                      ))
+                    ) : (
+                      <span className="text-sm text-muted-foreground italic">No cloud models available</span>
+                    )}
+                  </div>
+                </div>
+
+              </CardContent>
+            </Card>
           </div>
         </div>
-
-        <div className="grid gap-8 md:grid-cols-2">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="space-y-1">
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Profile Information
-                </CardTitle>
-                <CardDescription>Your personal account details</CardDescription>
-              </div>
-              {!isEditing ? (
-                <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
-                  <Edit2 className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
-              ) : (
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="sm" onClick={cancelEdit} disabled={saving}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                  <Button variant="default" size="sm" onClick={handleSave} disabled={saving}>
-                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                  </Button>
-                </div>
-              )}
-            </CardHeader>
-            <CardContent className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    value={profile?.email || ""}
-                    disabled
-                    className="pl-9 bg-muted"
-                  />
-                </div>
-                {isEditing && (
-                  <p className="text-xs text-muted-foreground">
-                    Email cannot be changed directly.
-                  </p>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <div className="relative">
-                  <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="username"
-                    value={isEditing ? formData.username : profile?.username || ""}
-                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    disabled={!isEditing}
-                    className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="gender">Gender</Label>
-                <div className="relative">
-                  <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="gender"
-                    value={isEditing ? formData.gender : profile?.gender || ""}
-                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                    disabled={!isEditing}
-                    className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="dob">DOB</Label>
-                <div className="relative">
-                  <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="dob"
-                    value={isEditing ? formData.dob : profile?.dob || ""}
-                    onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                    disabled={!isEditing}
-                    className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <div className="relative">
-                  <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="phone"
-                    value={isEditing ? formData.phone : profile?.phone || ""}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    disabled={!isEditing}
-                    className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Cpu className="h-5 w-5" />
-                Available Models
-              </CardTitle>
-              <CardDescription>AI models currently available in the system</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium flex items-center gap-2">
-                  <Cpu className="h-4 w-4 text-green-500" />
-                  Local Models (Privacy Focused)
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {models.local_models.length > 0 ? (
-                    models.local_models.map((model) => (
-                      <Badge key={model} variant="outline" className="px-3 py-1">
-                        {model}
-                      </Badge>
-                    ))
-                  ) : (
-                    <span className="text-sm text-muted-foreground italic">No local models detected</span>
-                  )}
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium flex items-center gap-2">
-                  <Cloud className="h-4 w-4 text-blue-500" />
-                  Cloud Models (Gemini)
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                   {models.cloud_models.length > 0 ? (
-                    models.cloud_models.map((model) => (
-                      <Badge key={model} variant="default" className="px-3 py-1 bg-blue-600 hover:bg-blue-700">
-                        {model}
-                      </Badge>
-                    ))
-                  ) : (
-                    <span className="text-sm text-muted-foreground italic">No cloud models available</span>
-                  )}
-                </div>
-              </div>
-
-            </CardContent>
-          </Card>
-        </div>
       </div>
-    </div>
+    </ClientLayout>
   );
 }

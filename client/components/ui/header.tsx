@@ -62,6 +62,14 @@ export default function header() {
             >
               Pricing
             </Link>
+            {token && (
+              <Link 
+                href="/settings"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Settings
+              </Link>
+            )}
             <Link href={token ? "/chat" : "/sign-in?redirect=/chat"}>
               <Button variant="outline">Try Chat</Button>
             </Link>
@@ -114,6 +122,19 @@ export default function header() {
                     </Button>
                   </Link>
                 </SheetClose>
+                {token && (
+                  <SheetClose asChild>
+                    <Link href="/settings">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        onClick={closeMobileMenu}
+                      >
+                        Settings
+                      </Button>
+                    </Link>
+                  </SheetClose>
+                )}
                 <SheetClose asChild>
                   <Link href={token ? "/chat" : "/sign-in?redirect=/chat"}>
                     <Button
