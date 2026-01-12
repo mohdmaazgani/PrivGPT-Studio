@@ -5,12 +5,61 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { User, Mail, Cpu, Cloud, Loader2, Edit2, Save, X } from "lucide-react";
+import { User, Mail, Loader2, Edit2, Save, X, CalendarIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { DayPicker, DropdownProps } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+
+function isoToDate(value?: string) {
+  return value ? new Date(value) : undefined;
+}
+
+function dateToISO(date?: Date) {
+  return date ? format(date, "yyyy-MM-dd") : "";
+}
+
+const CalendarDropdown = (props: DropdownProps) => {
+  const { value, onChange, children } = props;
+  const options = React.Children.toArray(children) as React.ReactElement<React.OptionHTMLAttributes<HTMLOptionElement>>[];
+
+  const handleChange = (newValue: string) => {
+    const changeEvent = {
+      target: { value: newValue },
+    } as React.ChangeEvent<HTMLSelectElement>;
+    onChange?.(changeEvent);
+  };
+
+  return (
+    <Select value={value?.toString()} onValueChange={handleChange}>
+      <SelectTrigger className="pr-1.5 focus:ring-0">
+        <SelectValue>{options.find(o => o.props.value === value)?.props.children}</SelectValue>
+      </SelectTrigger>
+      <SelectContent position="popper" className="max-h-[200px] overflow-y-auto">
+        {options.map((option) => (
+          <SelectItem key={option.props.value as string} value={option.props.value as string}>
+            {option.props.children}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
 
 export default function SettingsPage() {
   const { token, isLoading: authLoading } = useAuth();
@@ -31,10 +80,6 @@ export default function SettingsPage() {
     phone: ""
   });
   
-  const [models, setModels] = useState<{ local_models: string[]; cloud_models: string[] }>({
-    local_models: [],
-    cloud_models: [],
-  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -62,12 +107,6 @@ export default function SettingsPage() {
             dob: profileData.dob || "",
             phone: profileData.phone || "",
           });
-        }
-
-        const modelsRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/models`);
-        if (modelsRes.ok) {
-          const modelsData = await modelsRes.json();
-          setModels(modelsData);
         }
       } catch (error) {
         console.error("Failed to fetch settings data", error);
@@ -112,10 +151,10 @@ export default function SettingsPage() {
   const cancelEdit = () => {
     if (profile) {
       setFormData({ 
-        username: profile.username,
-        gender: profile.gender,
-        dob: profile.dob,
-        phone: profile.phone,
+        username: profile.username || "",
+        gender: profile.gender || "",
+        dob: profile.dob || "",
+        phone: profile.phone || "",
       });
     }
     setIsEditing(false);
@@ -135,7 +174,7 @@ export default function SettingsPage() {
         <div className="flex items-center space-x-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-            <p className="text-muted-foreground">Manage your profile and view system configurations.</p>
+            <p className="text-muted-foreground">Manage your profile details.</p>
           </div>
         </div>
 
@@ -200,39 +239,85 @@ export default function SettingsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender</Label>
-                <div className="relative">
-                  <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="gender"
-                    value={isEditing ? formData.gender : profile?.gender || ""}
-                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                    disabled={!isEditing}
-                    className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
-                  />
-                </div>
+                {isEditing ? (
+                  <Select
+                    value={formData.gender}
+                    onValueChange={(value) => setFormData({ ...formData, gender: value })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select your gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="relative">
+                    <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="gender"
+                      value={profile?.gender || ""}
+                      disabled
+                      className="pl-9 bg-muted"
+                    />
+                  </div>
+                )}
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="dob">DOB</Label>
-                <div className="relative">
-                  <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="dob"
-                    value={isEditing ? formData.dob : profile?.dob || ""}
-                    onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                    disabled={!isEditing}
-                    className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
-                  />
-                </div>
+                <Label htmlFor="dob">Date of Birth</Label>
+                {isEditing ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal ${!formData.dob && "text-muted-foreground"}`}
+                      >
+                        {formData.dob ? format(new Date(formData.dob), "dd-MM-yyyy") : "Pick a date"}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-3" align="start">
+                      <DayPicker
+                        mode="single"
+                        selected={isoToDate(formData.dob)}
+                        onSelect={(date) => setFormData({ ...formData, dob: dateToISO(date) })}
+                        fromYear={1900}
+                        toYear={new Date().getFullYear()}
+                        captionLayout="dropdown"
+                        disabled={{ after: new Date() }}
+                        components={{
+                          Dropdown: CalendarDropdown,
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <div className="relative">
+                    <CalendarIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="dob"
+                      value={profile?.dob ? format(new Date(profile.dob), "dd-MM-yyyy") : ""}
+                      disabled
+                      className="pl-9 bg-muted"
+                    />
+                  </div>
+                )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
                 <div className="relative">
                   <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="phone"
+                    type={isEditing ? "tel" : "text"}
                     value={isEditing ? formData.phone : profile?.phone || ""}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     disabled={!isEditing}
+                    placeholder="123-456-7890"
                     className={`pl-9 ${!isEditing ? "bg-muted" : "bg-background"}`}
                   />
                 </div>
